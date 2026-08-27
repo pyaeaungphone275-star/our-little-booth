@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Booth 📸 | Our Little Booth</title>
+
+  <!-- js/supabase.js must load before this gate check runs — it
+       provides requireAuth(), which sends you to login.html if you're
+       not signed in. Runs as early as possible, before the page paints. -->
+  <script src="js/supabase.js"></script>
+  <script>
+    requireAuth();
+  </script>
+
+  <!-- Applies saved Appearance/Experience settings before the page paints,
+       so there's no flash of the default theme/animations on load. -->
+  <script>
+    (function () {
+      var theme = localStorage.getItem("olbTheme");
+      if (theme === "lavender") document.documentElement.setAttribute("data-theme", "lavender");
+
+      var animations = localStorage.getItem("olbAnimations");
+      if (animations === "off") document.documentElement.setAttribute("data-animations", "off");
+    })();
+  </script>
+
+  <!-- Google Fonts: Poppins for headings, Nunito for body text,
+       Caveat for the handwritten-style Polaroid caption -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating heart decorations, purely CSS-animated -->
+  <span class="heart heart-1">💗</span>
+  <span class="heart heart-2">💗</span>
+  <span class="heart heart-3">💗</span>
+  <span class="heart heart-4">💗</span>
+  <span class="heart heart-5">💗</span>
+  <span class="heart heart-6">💗</span>
+
+  <header class="header">
+    <h1 class="title">📸 Our Little Booth</h1>
+    <p class="subtitle">Smile, laugh, and make another memory together.</p>
+    <a href="home.html" class="back-link">← Back Home</a>
+  </header>
+
+  <!-- Couple Booth room: only shown when a room code exists in
+       localStorage (see js/booth.js), so opening booth.html directly
+       (solo, no room) still works exactly as before. -->
+  <section class="panel couple-room-panel" id="coupleRoomPanel" hidden>
+    <h2 class="panel-title">💕 Our Little Booth</h2>
+    <p class="subtitle">A little place for the two of us.</p>
+
+    <p class="couple-reveal-label">Your Private Booth</p>
+    <p class="couple-code" id="roomCodeDisplay"></p>
+    <button type="button" class="btn-secondary" id="copyRoomCodeBtn">📋 Copy Code</button>
+    <p class="couple-reveal-hint">Share this code with your favorite person 💗</p>
+
+    <p class="couple-error" id="roomErrorBanner" hidden></p>
+
+    <p class="room-status" id="roomStatusText"><span class="status-dot"></span>Connecting...</p>
+
+    <div class="participants-grid">
+      <div class="participant-card">
+        <div class="participant-icon">💗</div>
+        <p class="participant-name">You</p>
+        <p class="participant-status">📷 Camera Ready</p>
+      </div>
+
+      <div class="participants-plus">+</div>
+
+      <div class="participant-card waiting" id="partnerCard">
+        <div class="participant-icon">🌸</div>
+        <p class="participant-name">Your Partner</p>
+        <p class="participant-status" id="partnerStatus">⏳ Waiting...</p>
+      </div>
+    </div>
+
+    <button type="button" class="btn" id="enterPhotoBoothBtn">📸 Enter Photo Booth</button>
+    <button type="button" class="btn-secondary danger" id="leaveBoothBtn">Leave Booth</button>
+
+    <p class="couple-note">Once you're both here, we'll take a picture together. 💗</p>
+    <p class="couple-note">Distance can't stop us from making memories. 💗</p>
+  </section>
+
+  <main class="booth-layout">
+    <section class="panel camera-panel">
+      <!-- Solo visits only ever show the "You" box below (unchanged
+           from before). In a Couple Booth room, js/booth.js/js/webrtc.js
+           unhide the "Your Partner" box and add the "dual" class here
+           once the live WebRTC video call starts. -->
+      <div class="camera-grid" id="cameraGrid">
+        <div class="camera-box">
+          <p class="camera-box-label">💗 You</p>
+          <div class="camera-preview" id="cameraPreview">
+            <div class="camera-icon">📷</div>
+            <p>Camera preview will appear here.</p>
+
+            <!-- Shows "3... 2... 1... 📸 Smile!" on top of the live video right before a photo is taken -->
+            <div class="countdown-overlay" id="countdownOverlay"></div>
+          </div>
+        </div>
+
+        <div class="camera-box" id="remoteCameraBox" hidden>
+          <p class="camera-box-label">🌸 Your Partner</p>
+          <div class="camera-preview" id="remoteCameraPreview">
+            <div class="camera-icon">🌸</div>
+            <p id="remoteCameraPlaceholderText">Connecting...</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="camera-connection-status" id="webrtcStatusText" hidden></p>
+    </section>
+
+    <section class="panel controls-panel">
+      <div class="form-group">
+        <label for="countdown">Countdown</label>
+        <select id="countdown" name="countdown">
+          <option value="3">3 seconds</option>
+          <option value="5">5 seconds</option>
+          <option value="10">10 seconds</option>
+        </select>
+      </div>
+
+      <div class="booth-actions">
+        <button type="button" class="btn" id="takePhotoBtn" disabled>📸 Take Photo</button>
+      </div>
+    </section>
+  </main>
+
+  <section class="panel beauty-panel">
+    <h2 class="panel-title">✨ Beauty Mode</h2>
+
+    <label class="toggle-row">
+      <span class="toggle-switch">
+        <input type="checkbox" id="enableBeautyMode" name="enableBeautyMode">
+        <span class="toggle-slider"></span>
+      </span>
+      Enable Beauty Mode
+    </label>
+
+    <div class="beauty-controls" id="beautySliders">
+      <div class="slider-group">
+        <label for="skinSmooth">✨ Skin Smooth</label>
+        <input type="range" id="skinSmooth" name="skinSmooth" min="0" max="100" value="20" disabled>
+      </div>
+
+      <div class="slider-group">
+        <label for="brightness">☀️ Brightness</label>
+        <input type="range" id="brightness" name="brightness" min="-50" max="50" value="10" disabled>
+      </div>
+
+      <div class="slider-group">
+        <label for="warmth">🌸 Warmth</label>
+        <input type="range" id="warmth" name="warmth" min="0" max="100" value="55" disabled>
+      </div>
+
+      <div class="slider-group">
+        <label for="contrast">🎨 Contrast</label>
+        <input type="range" id="contrast" name="contrast" min="0" max="100" value="55" disabled>
+      </div>
+
+      <div class="slider-group">
+        <label for="saturation">🌷 Saturation</label>
+        <input type="range" id="saturation" name="saturation" min="0" max="100" value="58" disabled>
+      </div>
+
+      <div class="slider-group">
+        <label for="softGlow">🌟 Soft Glow</label>
+        <input type="range" id="softGlow" name="softGlow" min="0" max="100" value="15" disabled>
+      </div>
+    </div>
+
+    <label class="toggle-row">
+      <input type="checkbox" id="lowLightEnhancement" name="lowLightEnhancement">
+      Low Light Enhancement
+    </label>
+  </section>
+
+  <section class="panel recent-memories-panel">
+    <h2 class="panel-title">🖼️ Recent Memories</h2>
+
+    <!-- Polaroid cards are added here by booth.js as photos are taken -->
+    <div class="memories-grid" id="recentMemories">
+      <p class="memories-empty" id="memoriesEmpty">Your memories will appear here after you take a photo.</p>
+    </div>
+
+    <p class="gallery-link-row">
+      <a href="memories.html" class="back-link">View Full Gallery →</a>
+    </p>
+  </section>
+
+  <footer class="footer">Every picture is another little memory.</footer>
+
+  <!-- js/room.js, js/realtime.js, and js/webrtc.js must load before
+       js/booth.js — they provide the room-code storage, Supabase
+       Realtime functions, and startPeerCall() that booth.js uses. -->
+  <script src="js/room.js"></script>
+  <script src="js/realtime.js"></script>
+  <script src="js/webrtc.js"></script>
+  <script src="js/booth.js"></script>
+</body>
+</html>

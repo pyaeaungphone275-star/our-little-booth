@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave a Note 💌 | Our Little Booth</title>
+
+  <!-- Google Fonts: Poppins for headings, Nunito for body text,
+       Caveat for the handwritten-style note text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating heart decorations, purely CSS-animated -->
+  <span class="heart heart-1">💗</span>
+  <span class="heart heart-2">💗</span>
+  <span class="heart heart-3">💗</span>
+  <span class="heart heart-4">💗</span>
+  <span class="heart heart-5">💗</span>
+  <span class="heart heart-6">💗</span>
+
+  <header class="header">
+    <h1 class="title">Leave a Note 💌</h1>
+    <p class="subtitle">A little something sweet for your person.</p>
+    <a href="home.html" class="back-link">← Back Home</a>
+  </header>
+
+  <section class="panel note-form-panel">
+    <h2 class="panel-title">✍️ Write a Note</h2>
+
+    <form class="form" id="noteForm">
+      <div class="form-group">
+        <label for="noteFrom">From</label>
+        <input type="text" id="noteFrom" name="noteFrom" placeholder="Your name (optional)">
+      </div>
+
+      <div class="form-group">
+        <label for="noteText">Your Note</label>
+        <textarea id="noteText" name="noteText" rows="3" placeholder="Write something sweet..." required></textarea>
+      </div>
+
+      <button type="submit" class="btn">💌 Leave Note</button>
+    </form>
+  </section>
+
+  <section class="panel notes-panel">
+    <h2 class="panel-title">💗 Notes Left So Far</h2>
+
+    <div class="notes-grid" id="notesGallery">
+      <div class="memories-empty" id="notesEmpty">
+        <div class="memories-empty-icon">💌</div>
+        <p class="memories-empty-title">No notes yet.</p>
+        <p>Leave the first one above.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">Every note is another little "I love you."</footer>
+
+  <script src="js/notes.js"></script>
+</body>
+</html>

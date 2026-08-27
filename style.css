@@ -1,0 +1,1222 @@
+/* ---------- Base ---------- */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+  font-family: "Nunito", sans-serif;
+
+  /* Pastel pink to cream gradient background */
+  background: linear-gradient(135deg, #ffe4ec 0%, #fff8f0 50%, #f2e6ff 100%);
+}
+
+/* ---------- Glassmorphism card ---------- */
+
+.card {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  max-width: 480px;
+  text-align: center;
+  padding: 3rem 2rem;
+  border-radius: 30px;
+
+  /* Frosted glass look */
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(216, 175, 210, 0.35);
+
+  /* Gentle fade-in on page load */
+  animation: fadeIn 1.2s ease-out;
+}
+
+.title {
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: #6b4f63;
+}
+
+.subtitle {
+  margin-top: 1rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  line-height: 1.6;
+  color: #8a7189;
+}
+
+/* ---------- Logo ---------- */
+
+.logo {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Quote ---------- */
+
+.quote {
+  margin-top: 0.75rem;
+  font-size: clamp(0.85rem, 2.2vw, 0.95rem);
+  font-style: italic;
+  line-height: 1.6;
+  color: #a98ba7;
+}
+
+/* ---------- Button ---------- */
+
+.btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.9rem 2.2rem;
+  font-family: "Nunito", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #f7a8c4, #d9b8f5);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(217, 150, 190, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(217, 150, 190, 0.55);
+}
+
+/* ---------- Form ---------- */
+
+.form {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b4f63;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  color: #6b4f63;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(217, 150, 190, 0.4);
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #b79db5;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #f7a8c4;
+  box-shadow: 0 0 0 3px rgba(247, 168, 196, 0.3);
+}
+
+.form .btn {
+  width: 100%;
+  text-align: center;
+}
+
+/* ---------- Auth message (login.html) ---------- */
+
+.auth-message {
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  color: #6b4f63;
+}
+
+.auth-message.error {
+  color: #c96a6a;
+}
+
+/* ---------- Secondary button ---------- */
+
+.btn-secondary {
+  display: inline-block;
+  width: 100%;
+  margin-top: 0.9rem;
+  padding: 0.9rem 2.2rem;
+  font-family: "Nunito", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #b06a95;
+  text-decoration: none;
+  background: transparent;
+  border: 2px solid #d9b8f5;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-3px);
+  background: rgba(217, 184, 245, 0.15);
+}
+
+/* ---------- Back link ---------- */
+
+.back-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #a98ba7;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* Lets a <button class="back-link"> (e.g. Logout) look identical to
+   the <a class="back-link"> version above, instead of a browser-default
+   button box. */
+button.back-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ---------- Header (Home page) ---------- */
+
+.header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  animation: fadeIn 1.2s ease-out;
+}
+
+.header .subtitle {
+  margin-top: 0.4rem;
+}
+
+/* ---------- Card grid (Home page) ---------- */
+
+.card-grid {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.action-card {
+  /* Reset link defaults so an <a class="action-card"> looks identical
+     to the plain <article> version used for the not-yet-built cards. */
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 24px;
+
+  /* Same frosted glass language as the main .card */
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(216, 175, 210, 0.35);
+
+  animation: fadeIn 1.2s ease-out;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(216, 175, 210, 0.45);
+}
+
+.action-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.action-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.15rem;
+  color: #6b4f63;
+  margin-bottom: 0.5rem;
+}
+
+.action-desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #8a7189;
+}
+
+/* ---------- Booth layout ---------- */
+
+.booth-layout {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.panel {
+  padding: 2rem;
+  border-radius: 24px;
+
+  /* Same frosted glass language as the main .card */
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(216, 175, 210, 0.35);
+
+  animation: fadeIn 1.2s ease-out;
+}
+
+.camera-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+/* Holds the "You" box (always) and the "Your Partner" box (Couple
+   Booth rooms only, added by JS once a WebRTC call starts). A single
+   column keeps the solo layout exactly as it was before. */
+.camera-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.camera-grid.dual {
+  grid-template-columns: 1fr 1fr;
+}
+
+.camera-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.camera-box-label {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #b06a95;
+  text-align: center;
+}
+
+.camera-connection-status {
+  font-size: 0.85rem;
+  color: #a98ba7;
+  text-align: center;
+}
+
+.camera-preview {
+  position: relative; /* anchors the countdown overlay to this box */
+  width: 100%;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.75rem;
+  border-radius: 18px;
+  border: 2px dashed rgba(217, 150, 190, 0.5);
+  background: rgba(255, 255, 255, 0.25);
+  color: #8a7189;
+}
+
+/* ---------- Countdown overlay ---------- */
+
+.countdown-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  background: rgba(107, 79, 99, 0.55);
+  color: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  font-weight: 700;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Added by JS right before a countdown starts, removed once it ends */
+.countdown-overlay.active {
+  display: flex;
+}
+
+.camera-icon {
+  font-size: 3rem;
+}
+
+/* Once the webcam feed is showing, the preview no longer needs the
+   dashed "placeholder" look, just the rounded frame around the video. */
+.camera-preview.camera-active {
+  border-style: solid;
+  border-color: transparent;
+  background: transparent;
+  padding: 0;
+}
+
+.camera-preview video {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  object-fit: cover;
+  border-radius: 18px;
+  display: block;
+
+  /* Smooths out filter changes as Beauty Mode sliders are dragged */
+  transition: filter 0.15s ease;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: "Nunito", sans-serif;
+  font-size: 1rem;
+  color: #6b4f63;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(217, 150, 190, 0.4);
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-group select:focus {
+  border-color: #f7a8c4;
+  box-shadow: 0 0 0 3px rgba(247, 168, 196, 0.3);
+}
+
+.booth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.booth-actions .btn,
+.booth-actions .btn-secondary {
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Dimmed, non-interactive look while a button's action isn't available yet
+   (e.g. Take Photo before the webcam has finished loading) */
+.btn:disabled,
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---------- Beauty controls ---------- */
+
+.panel-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.15rem;
+  color: #6b4f63;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Toggle rows (checkboxes) ---------- */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6b4f63;
+  cursor: pointer;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: #d9799e;
+  cursor: pointer;
+}
+
+/* ---------- Animated toggle switch (Enable Beauty Mode) ---------- */
+
+/* The pill-shaped track. The real checkbox lives inside it, stretched
+   to cover it and hidden with opacity so clicking/tapping/keyboard
+   focus still work normally — only the look is replaced. */
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  width: 46px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* The visible track + sliding knob, drawn from the checkbox's sibling span. */
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: rgba(217, 150, 190, 0.35);
+  border: 1px solid rgba(217, 150, 190, 0.5);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(217, 150, 190, 0.5);
+  transition: transform 0.25s ease;
+}
+
+/* Checked state: pastel gradient track, knob slides to the right. */
+.toggle-switch input[type="checkbox"]:checked ~ .toggle-slider {
+  background: linear-gradient(135deg, #f7a8c4, #d9b8f5);
+  border-color: transparent;
+}
+
+.toggle-switch input[type="checkbox"]:checked ~ .toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.toggle-switch input[type="checkbox"]:focus-visible ~ .toggle-slider {
+  box-shadow: 0 0 0 3px rgba(247, 168, 196, 0.4);
+}
+
+.beauty-controls {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Dimmed, non-interactive look while Beauty Mode is off */
+.beauty-controls input[type="range"]:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slider-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b4f63;
+}
+
+/* Rounded pastel slider track + thumb.
+   Sliders need separate -webkit-/-moz- rules because browsers
+   don't share one standard way to restyle them yet. */
+.slider-group input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #f7a8c4, #d9b8f5);
+  outline: none;
+  cursor: pointer;
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #d9799e;
+  box-shadow: 0 2px 6px rgba(217, 150, 190, 0.5);
+}
+
+.slider-group input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #d9799e;
+  box-shadow: 0 2px 6px rgba(217, 150, 190, 0.5);
+}
+
+/* ---------- Recent Memories ---------- */
+
+.recent-memories-panel {
+  width: 100%;
+  max-width: 900px;
+}
+
+.gallery-link-row {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.memories-grid {
+  display: grid;
+  /* auto-fill + minmax means this reflows on its own at any screen size —
+     no extra media query needed for the responsive requirement. */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.memories-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 18px;
+  border: 2px dashed rgba(217, 150, 190, 0.5);
+  background: rgba(255, 255, 255, 0.25);
+  color: #8a7189;
+  font-size: 0.95rem;
+}
+
+.memories-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.memories-empty-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: #6b4f63;
+  margin-bottom: 0.3rem;
+}
+
+/* ---------- Gallery nav (memories.html) ---------- */
+
+.gallery-nav {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.gallery-nav .btn,
+.gallery-nav .btn-secondary {
+  margin-top: 0;
+  width: auto;
+  flex: 1;
+  max-width: 260px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .gallery-nav {
+    flex-direction: column;
+  }
+
+  .gallery-nav .btn,
+  .gallery-nav .btn-secondary {
+    max-width: none;
+  }
+}
+
+/* ---------- Notes (notes.html) ---------- */
+
+.note-form-panel,
+.notes-panel {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 600px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.note-card {
+  position: relative;
+  background: #fffdf7;
+  border-radius: 16px;
+  padding: 1.2rem 1.1rem 1rem;
+  box-shadow: 0 10px 26px rgba(216, 175, 210, 0.4);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.note-card-heart {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-size: 1.4rem;
+  transform: rotate(15deg);
+  animation: float 6s ease-in-out infinite;
+}
+
+.note-card-text {
+  font-family: "Caveat", cursive;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: #6b4f63;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note-card-meta {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: #a98ba7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.note-card-from {
+  font-weight: 600;
+  color: #b06a95;
+}
+
+.note-card-delete {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #c9899f;
+  transition: transform 0.2s ease;
+}
+
+.note-card-delete:hover {
+  transform: scale(1.15);
+}
+
+/* ---------- Polaroid card ---------- */
+
+.polaroid-card {
+  position: relative; /* anchors the small heart sticker below */
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 16px;
+  /* Thin border on top/left/right, no bottom padding here — the
+     larger "bottom border" is .polaroid-bottom's own padding below. */
+  padding: 14px 14px 0;
+  box-shadow: 0 10px 26px rgba(216, 175, 210, 0.4);
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Small heart sticker in the corner of a gallery Polaroid (memories.html) */
+.polaroid-heart {
+  position: absolute;
+  top: -10px;
+  right: -8px;
+  font-size: 1.4rem;
+  transform: rotate(15deg);
+  animation: float 6s ease-in-out infinite;
+}
+
+.polaroid-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+/* The larger bottom border: holds the auto-added title/date and the
+   handwritten-style caption, like the white strip on a real Polaroid. */
+.polaroid-bottom {
+  padding: 0.75rem 0.25rem 1.1rem;
+  text-align: center;
+}
+
+.polaroid-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #b06a95;
+}
+
+.polaroid-datetime {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: #a98ba7;
+}
+
+.polaroid-caption {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.5rem;
+  border: none;
+  border-bottom: 1px dashed rgba(217, 150, 190, 0.5);
+  background: transparent;
+  resize: none;
+  overflow: hidden;
+  font-family: "Caveat", cursive;
+  font-size: 1.2rem;
+  color: #6b4f63;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.25s ease;
+}
+
+.polaroid-caption::placeholder {
+  color: #c9b3c7;
+  font-family: "Caveat", cursive;
+}
+
+.polaroid-caption:focus {
+  border-color: #f7a8c4;
+}
+
+/* Read-only caption text used on the memories.html gallery cards
+   (same handwritten look as .polaroid-caption, but a <p>, not an input). */
+.polaroid-caption-text {
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px dashed rgba(217, 150, 190, 0.5);
+  font-family: "Caveat", cursive;
+  font-size: 1.2rem;
+  color: #6b4f63;
+  text-align: center;
+}
+
+.polaroid-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.polaroid-btn {
+  flex: 1;
+  padding: 0.45rem 0.3rem;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #b06a95;
+  background: transparent;
+  border: 1.5px solid #d9b8f5;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.polaroid-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(217, 184, 245, 0.15);
+}
+
+/* The Delete button gets a soft red tint so it reads as the "undo-able,
+   but be sure" action among the three. */
+.polaroid-btn.delete {
+  border-color: #f3a6a6;
+  color: #c96a6a;
+}
+
+/* ---------- Couple Booth (home.html) ---------- */
+
+.couple-panel {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.couple-intro {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: #8a7189;
+}
+
+.couple-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.couple-actions .btn,
+.couple-actions .btn-secondary {
+  flex: 1;
+  margin-top: 0;
+}
+
+.couple-reveal {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(217, 150, 190, 0.4);
+}
+
+.couple-reveal .form-group {
+  text-align: left;
+}
+
+.couple-reveal-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b4f63;
+}
+
+.couple-code {
+  margin-top: 0.5rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #b06a95;
+}
+
+.couple-reveal-hint {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: #a98ba7;
+}
+
+.couple-error {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #c96a6a;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .couple-actions {
+    flex-direction: column;
+  }
+}
+
+/* ---------- Couple Room panel (booth.html) ---------- */
+
+.couple-room-panel {
+  width: 100%;
+  max-width: 900px;
+  text-align: center;
+}
+
+/* Large, full-width primary button to match Copy Code/Leave Booth below it */
+.couple-room-panel .btn {
+  width: 100%;
+  text-align: center;
+}
+
+.room-status {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #a98ba7;
+}
+
+/* Small pulsing dot next to "Waiting for your partner..." so the
+   waiting state reads as alive, not stuck. */
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: #d9799e;
+  vertical-align: middle;
+  animation: pulseDot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.participants-grid {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.participant-card {
+  flex: 1;
+  min-width: 180px;
+  padding: 1.5rem 1rem;
+  border-radius: 18px;
+  border: 2px dashed rgba(217, 150, 190, 0.5);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* The "+" connecting the two participant cards, like the two of you
+   joining one little room. */
+.participants-plus {
+  flex-shrink: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #d9799e;
+}
+
+.participant-card.waiting {
+  opacity: 0.75;
+}
+
+.participant-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.participant-name {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: #6b4f63;
+}
+
+.participant-status {
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: #8a7189;
+}
+
+.couple-note {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #a98ba7;
+}
+
+/* ---------- Settings page ---------- */
+
+.settings-panel {
+  width: 100%;
+  max-width: 600px;
+  text-align: left;
+}
+
+.theme-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.theme-btn {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* Highlights whichever theme button matches the saved olbTheme preference */
+.theme-btn.active {
+  background: linear-gradient(135deg, #f7a8c4, #d9b8f5);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+/* Danger-tinted variant of .btn-secondary, same red as .polaroid-btn.delete */
+.btn-secondary.danger {
+  border-color: #f3a6a6;
+  color: #c96a6a;
+}
+
+.btn-secondary.danger:hover {
+  background: rgba(243, 166, 166, 0.15);
+}
+
+.settings-confirm {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 2px dashed rgba(243, 166, 166, 0.5);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.settings-confirm p {
+  font-size: 0.9rem;
+  color: #6b4f63;
+}
+
+.settings-confirm-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.settings-confirm-actions .btn-secondary {
+  flex: 1;
+  margin-top: 0;
+}
+
+.settings-success {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6b4f63;
+  text-align: center;
+}
+
+/* ---------- Lavender theme ----------
+   Additive-only: the default (pink) rules above are untouched, this just
+   overrides a handful of the most visible colors when olbTheme is saved
+   as "lavender" (applied via a data-theme attribute on <html>). */
+
+html[data-theme="lavender"] body {
+  background: linear-gradient(135deg, #f2e6ff 0%, #fff8f0 50%, #ffe4ec 100%);
+}
+
+html[data-theme="lavender"] .title {
+  color: #5d4a7a;
+}
+
+html[data-theme="lavender"] .btn {
+  background: linear-gradient(135deg, #d9b8f5, #c9a0f0);
+}
+
+html[data-theme="lavender"] .toggle-switch input[type="checkbox"]:checked ~ .toggle-slider {
+  background: linear-gradient(135deg, #d9b8f5, #c9a0f0);
+}
+
+html[data-theme="lavender"] .slider-group input[type="range"] {
+  background: linear-gradient(135deg, #d9b8f5, #c9a0f0);
+}
+
+/* ---------- Animations off (olbAnimations saved as "off") ---------- */
+
+html[data-animations="off"] * {
+  animation: none !important;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  position: relative;
+  z-index: 2;
+  font-size: 0.85rem;
+  color: #a98ba7;
+  text-align: center;
+}
+
+/* ---------- Floating hearts ---------- */
+
+.heart {
+  position: absolute;
+  z-index: 1;
+  font-size: 1.8rem;
+  opacity: 0.7;
+  animation: float 6s ease-in-out infinite;
+  user-select: none;
+}
+
+.heart-1 { top: 10%; left: 8%;  font-size: 2rem;   animation-delay: 0s; }
+.heart-2 { top: 20%; right: 10%; font-size: 1.5rem; animation-delay: 1s; }
+.heart-3 { bottom: 15%; left: 12%; font-size: 1.7rem; animation-delay: 2s; }
+.heart-4 { bottom: 25%; right: 15%; font-size: 2.2rem; animation-delay: 0.5s; }
+.heart-5 { top: 45%; left: 4%;  font-size: 1.3rem; animation-delay: 1.5s; }
+.heart-6 { top: 5%; right: 30%; font-size: 1.4rem; animation-delay: 2.5s; }
+
+/* ---------- Animations ---------- */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(8deg);
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+  .card {
+    padding: 2.2rem 1.4rem;
+  }
+
+  .heart {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .booth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .camera-grid.dual {
+    grid-template-columns: 1fr;
+  }
+}

@@ -44,6 +44,8 @@ function getParticipants(code) {
 // Uses PostgREST's upsert (insert ... on conflict do update) so calling
 // this again — e.g. on a page refresh — doesn't fail as a duplicate.
 function addParticipant(code, currentUser) {
+  console.log("[ROOM] Adding creator as participant...", { room_code: code, user_id: currentUser.id });
+
   return fetch(SUPABASE_URL + "/rest/v1/room_participants?on_conflict=room_code,user_id", {
     method: "POST",
     headers: realtimeHeaders({ Prefer: "resolution=merge-duplicates" }),
@@ -53,7 +55,22 @@ function addParticipant(code, currentUser) {
       display_name: currentUser.displayName || currentUser.email
     })
   }).then(function (response) {
-    if (!response.ok) throw realtimeError("error", "Couldn't join this booth. Please try again.");
+    if (response.ok) {
+      console.log("[ROOM] Participant insert result: ok", response.status);
+      return;
+    }
+
+    return response.json().catch(function () { return null; }).then(function (body) {
+      console.error("[ROOM] Participant insert result: FAILED", {
+        status: response.status,
+        message: body && body.message,
+        details: body && body.details,
+        hint: body && body.hint,
+        code: body && body.code,
+        raw: body
+      });
+      throw realtimeError("error", "Couldn't join this booth. Please try again.");
+    });
   });
 }
 
@@ -68,21 +85,48 @@ function addParticipant(code, currentUser) {
 function createRoom(attempt) {
   attempt = attempt || 1;
   const currentUser = getCurrentUser();
+  console.log("[ROOM] Current user:", currentUser);
+
+  if (!currentUser || !currentUser.id) {
+    console.error("[ROOM] No signed-in user available — cannot create a room.");
+    return Promise.reject(realtimeError("error", "Couldn't create a booth. Please try again."));
+  }
+
   const code = generateRoomCode();
+  console.log("[ROOM] Generated room code:", code, "(attempt " + attempt + ")");
+  console.log("[ROOM] Creating room...");
 
   return fetch(SUPABASE_URL + "/rest/v1/rooms", {
     method: "POST",
     headers: realtimeHeaders({ Prefer: "return=minimal" }),
     body: JSON.stringify({ room_code: code, creator_id: currentUser.id })
   }).then(function (response) {
-    if (response.status === 409) {
-      if (attempt >= 5) throw realtimeError("error", "Couldn't create a booth. Please try again.");
-      return createRoom(attempt + 1);
+    if (response.ok) {
+      console.log("[ROOM] Room insert result: ok", response.status);
+      return addParticipant(code, currentUser).then(function () {
+        console.log("[ROOM] Room created successfully:", code);
+        return code;
+      });
     }
-    if (!response.ok) throw realtimeError("error", "Couldn't create a booth. Please try again.");
 
-    return addParticipant(code, currentUser).then(function () {
-      return code;
+    return response.json().catch(function () { return null; }).then(function (body) {
+      console.error("[ROOM] Room insert result: FAILED", {
+        status: response.status,
+        message: body && body.message,
+        details: body && body.details,
+        hint: body && body.hint,
+        code: body && body.code,
+        raw: body
+      });
+
+      // 23505 = unique_violation (room_code already taken) — PostgREST also
+      // returns plain HTTP 409 for this. Either way, retry with a new code.
+      if (response.status === 409 || (body && body.code === "23505")) {
+        if (attempt >= 5) throw realtimeError("error", "Couldn't create a booth. Please try again.");
+        return createRoom(attempt + 1);
+      }
+
+      throw realtimeError("error", "Couldn't create a booth. Please try again.");
     });
   });
 }

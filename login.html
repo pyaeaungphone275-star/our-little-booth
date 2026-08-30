@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome Back 💗 | Our Little Booth</title>
+
+  <!-- Google Fonts: Poppins for headings, Nunito for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating heart decorations, purely CSS-animated -->
+  <span class="heart heart-1">💗</span>
+  <span class="heart heart-2">💗</span>
+  <span class="heart heart-3">💗</span>
+  <span class="heart heart-4">💗</span>
+  <span class="heart heart-5">💗</span>
+  <span class="heart heart-6">💗</span>
+
+  <main class="card">
+    <h1 class="title">Welcome Kokoh yk Achit Lay 💗</h1>
+    <p class="subtitle">Let's make another memory together.</p>
+
+    <form class="form" id="loginForm">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" name="loginEmail" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" name="loginPassword" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn">Log In</button>
+      <button type="button" class="btn-secondary" id="showSignUpBtn">Create Account</button>
+    </form>
+
+    <!-- Hidden until "Create Account" is clicked -->
+    <form class="form" id="signUpForm" hidden>
+      <div class="form-group">
+        <label for="signUpName">Display Name</label>
+        <input type="text" id="signUpName" name="signUpName" placeholder="What should we call you?" required>
+      </div>
+
+      <div class="form-group">
+        <label for="signUpEmail">Email</label>
+        <input type="email" id="signUpEmail" name="signUpEmail" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="signUpPassword">Password</label>
+        <input type="password" id="signUpPassword" name="signUpPassword" placeholder="At least 6 characters" required minlength="6">
+      </div>
+
+      <button type="submit" class="btn">Create Account</button>
+      <button type="button" class="btn-secondary" id="showLoginBtn">Back to Log In</button>
+    </form>
+
+    <p class="auth-message" id="authMessage" hidden></p>
+
+    <a href="index.html" class="back-link">Back to Home</a>
+  </main>
+
+  <footer class="footer">Every visit starts another beautiful memory.</footer>
+
+  <!-- js/supabase.js must load before js/auth.js — it provides the
+       signUp()/logIn()/redirectIfAuthed() functions auth.js uses. -->
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

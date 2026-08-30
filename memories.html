@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Memories 💗 | Our Little Booth</title>
+
+  <!-- js/supabase.js must load before this gate check runs — it
+       provides requireAuth(), which sends you to login.html if you're
+       not signed in. Runs as early as possible, before the page paints. -->
+  <script src="js/supabase.js"></script>
+  <script>
+    requireAuth();
+  </script>
+
+  <!-- Google Fonts: Poppins for headings, Nunito for body text,
+       Caveat for the handwritten-style Polaroid caption -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating heart decorations, purely CSS-animated -->
+  <span class="heart heart-1">💗</span>
+  <span class="heart heart-2">💗</span>
+  <span class="heart heart-3">💗</span>
+  <span class="heart heart-4">💗</span>
+  <span class="heart heart-5">💗</span>
+  <span class="heart heart-6">💗</span>
+
+  <header class="header">
+    <h1 class="title">Our Little Memories 💗</h1>
+    <p class="subtitle">Little moments that we never want to forget.</p>
+  </header>
+
+  <nav class="gallery-nav">
+    <a href="home.html" class="btn-secondary">🏠 Back Home</a>
+    <a href="booth.html" class="btn">📸 Create Memory</a>
+  </nav>
+
+  <main class="panel recent-memories-panel">
+    <div class="memories-grid" id="memoriesGallery">
+      <!-- Shown until at least one saved memory is found in localStorage -->
+      <div class="memories-empty" id="memoriesEmpty">
+        <div class="memories-empty-icon">📸</div>
+        <p class="memories-empty-title">No memories yet.</p>
+        <p>Let's create our first one together.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">Every picture is another little memory.</footer>
+
+  <script>
+    // ---------------------------------------------------------------
+    // memories.html — reads saved photos out of localStorage and
+    // draws them as Polaroid cards. This page never writes anything;
+    // all the saving happens on the booth page (js/booth.js) whenever
+    // a photo is taken, a caption is edited, or a memory is deleted.
+    //
+    // localStorage only stores text, so booth.js saves every memory
+    // as one JSON string under the key below. Here we just read that
+    // same string back and turn it into an array with JSON.parse.
+    // ---------------------------------------------------------------
+    const MEMORIES_STORAGE_KEY = "olbMemories";
+
+    const memoriesGallery = document.getElementById("memoriesGallery");
+    const memoriesEmpty = document.getElementById("memoriesEmpty");
+
+    // Reads the saved memories list out of localStorage. Returns an
+    // empty array if nothing has been saved yet (or the data is
+    // unreadable), so the gallery can safely show the empty state.
+    function loadMemoriesFromStorage() {
+      const stored = localStorage.getItem(MEMORIES_STORAGE_KEY);
+      if (!stored) return [];
+
+      try {
+        return JSON.parse(stored);
+      } catch (error) {
+        return [];
+      }
+    }
+
+    // Builds one Polaroid card for a saved memory (photo, date, time,
+    // caption, and a small heart sticker) and adds it to the gallery.
+    function renderMemoryCard(memory) {
+      const card = document.createElement("div");
+      card.className = "polaroid-card";
+
+      card.innerHTML = `
+        <span class="polaroid-heart">💗</span>
+        <img class="polaroid-photo" src="${memory.photoDataURL}" alt="A captured memory">
+        <div class="polaroid-bottom">
+          <p class="polaroid-datetime">${memory.dateText} · ${memory.timeText}</p>
+          <p class="polaroid-caption-text"></p>
+        </div>
+      `;
+
+      // Set the caption as text (not HTML) so a caption can never be
+      // mistaken for markup — it just always shows as plain words.
+      const captionField = card.querySelector(".polaroid-caption-text");
+      captionField.textContent = memory.caption ? memory.caption : "No caption yet.";
+
+      memoriesGallery.appendChild(card);
+    }
+
+    // Loads every saved memory and either draws the gallery or leaves
+    // the empty state showing.
+    function renderGallery() {
+      const memories = loadMemoriesFromStorage();
+
+      if (memories.length === 0) {
+        return; // Empty state is already in the page by default.
+      }
+
+      memoriesEmpty.style.display = "none";
+      memories.forEach(renderMemoryCard);
+    }
+
+    renderGallery();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings ⚙️ | Our Little Booth</title>
+
+  <!-- js/supabase.js must load before this gate check runs — it
+       provides requireAuth(), which sends you to login.html if you're
+       not signed in. Runs as early as possible, before the page paints. -->
+  <script src="js/supabase.js"></script>
+  <script>
+    requireAuth();
+  </script>
+
+  <!-- Applies saved Appearance/Experience settings before the page paints,
+       so there's no flash of the default theme/animations on load. -->
+  <script>
+    (function () {
+      var theme = localStorage.getItem("olbTheme");
+      if (theme === "lavender") document.documentElement.setAttribute("data-theme", "lavender");
+
+      var animations = localStorage.getItem("olbAnimations");
+      if (animations === "off") document.documentElement.setAttribute("data-animations", "off");
+    })();
+  </script>
+
+  <!-- Google Fonts: Poppins for headings, Nunito for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating heart decorations, purely CSS-animated -->
+  <span class="heart heart-1">💗</span>
+  <span class="heart heart-2">💗</span>
+  <span class="heart heart-3">💗</span>
+  <span class="heart heart-4">💗</span>
+  <span class="heart heart-5">💗</span>
+  <span class="heart heart-6">💗</span>
+
+  <header class="header">
+    <h1 class="title">Settings ⚙️</h1>
+    <p class="subtitle">Make it feel like yours.</p>
+    <a href="home.html" class="back-link">← Back to Home</a>
+  </header>
+
+  <section class="panel settings-panel">
+    <h2 class="panel-title">🌸 Appearance</h2>
+
+    <p>Theme</p>
+    <div class="theme-options">
+      <button type="button" class="btn-secondary theme-btn" id="themePinkBtn" data-theme-value="pink">🌸 Pink</button>
+      <button type="button" class="btn-secondary theme-btn" id="themeLavenderBtn" data-theme-value="lavender">💜 Lavender</button>
+    </div>
+  </section>
+
+  <section class="panel settings-panel">
+    <h2 class="panel-title">📸 Photo Booth</h2>
+
+    <div class="form-group">
+      <label for="defaultCountdown">Default countdown</label>
+      <select id="defaultCountdown" name="defaultCountdown">
+        <option value="3">3 seconds</option>
+        <option value="5">5 seconds</option>
+        <option value="10">10 seconds</option>
+      </select>
+    </div>
+
+    <label class="toggle-row">
+      <span class="toggle-switch">
+        <input type="checkbox" id="defaultBeautyMode" name="defaultBeautyMode">
+        <span class="toggle-slider"></span>
+      </span>
+      Beauty Mode
+    </label>
+  </section>
+
+  <section class="panel settings-panel">
+    <h2 class="panel-title">✨ Experience</h2>
+
+    <label class="toggle-row">
+      <span class="toggle-switch">
+        <input type="checkbox" id="animationsToggle" name="animationsToggle">
+        <span class="toggle-slider"></span>
+      </span>
+      Animations
+    </label>
+
+    <label class="toggle-row">
+      <span class="toggle-switch">
+        <input type="checkbox" id="soundEffectsToggle" name="soundEffectsToggle">
+        <span class="toggle-slider"></span>
+      </span>
+      Sound Effects
+    </label>
+  </section>
+
+  <section class="panel settings-panel">
+    <h2 class="panel-title">💗 Memories</h2>
+
+    <button type="button" class="btn-secondary danger" id="clearMemoriesBtn">🗑️ Clear Local Memories</button>
+
+    <div class="settings-confirm" id="clearMemoriesConfirm" hidden>
+      <p>Are you sure? This will remove every saved memory from this device.</p>
+      <div class="settings-confirm-actions">
+        <button type="button" class="btn-secondary danger" id="confirmClearBtn">Yes, clear them</button>
+        <button type="button" class="btn-secondary" id="cancelClearBtn">Cancel</button>
+      </div>
+    </div>
+
+    <p class="settings-success" id="clearMemoriesSuccess" hidden>🧹 Your memories have been cleared.</p>
+  </section>
+
+  <footer class="footer">
+    <p>Our Little Booth 💗</p>
+    <p>Made for two people, no matter the distance.</p>
+  </footer>
+
+  <script src="js/settings.js"></script>
+</body>
+</html>

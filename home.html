@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home 💗 | Our Little Booth</title>
+
+  <!-- js/supabase.js must load before this gate check runs — it
+       provides requireAuth(), which sends you to login.html if you're
+       not signed in. Runs as early as possible, before the page paints. -->
+  <script src="js/supabase.js"></script>
+  <script>
+    requireAuth();
+  </script>
+
+  <!-- Applies saved Appearance/Experience settings before the page paints,
+       so there's no flash of the default theme/animations on load. -->
+  <script>
+    (function () {
+      var theme = localStorage.getItem("olbTheme");
+      if (theme === "lavender") document.documentElement.setAttribute("data-theme", "lavender");
+
+      var animations = localStorage.getItem("olbAnimations");
+      if (animations === "off") document.documentElement.setAttribute("data-animations", "off");
+    })();
+  </script>
+
+  <!-- Google Fonts: Poppins for headings, Nunito for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Floating heart decorations, purely CSS-animated -->
+  <span class="heart heart-1">💗</span>
+  <span class="heart heart-2">💗</span>
+  <span class="heart heart-3">💗</span>
+  <span class="heart heart-4">💗</span>
+  <span class="heart heart-5">💗</span>
+  <span class="heart heart-6">💗</span>
+
+  <header class="header">
+    <h1 class="title">Our Little Booth 💗</h1>
+    <p class="subtitle" id="welcomeMessage">Welcome back 💗</p>
+    <p class="subtitle">What would you like to do today?</p>
+    <button type="button" class="back-link" id="logoutBtn">Logout 🚪</button>
+  </header>
+
+  <main class="card-grid">
+    <a href="booth.html" class="action-card">
+      <div class="action-icon">📸</div>
+      <h2 class="action-title">Start Our Booth</h2>
+      <p class="action-desc">Open the camera and capture a new memory.</p>
+    </a>
+
+    <a href="memories.html" class="action-card">
+      <div class="action-icon">🖼</div>
+      <h2 class="action-title">Our Memories</h2>
+      <p class="action-desc">View all of our saved moments.</p>
+    </a>
+
+    <a href="notes.html" class="action-card">
+      <div class="action-icon">💌</div>
+      <h2 class="action-title">Leave a Note</h2>
+      <p class="action-desc">Write a sweet message for your partner.</p>
+    </a>
+
+    <a href="settings.html" class="action-card">
+      <div class="action-icon">⚙️</div>
+      <h2 class="action-title">Settings</h2>
+      <p class="action-desc">Customize your little booth.</p>
+    </a>
+  </main>
+
+  <section class="panel couple-panel">
+    <h2 class="panel-title">💕 Couple Booth</h2>
+    <p class="couple-intro">Create a little room for two.</p>
+
+    <div class="couple-actions">
+      <button type="button" class="btn" id="createBoothBtn">Create a Booth</button>
+      <button type="button" class="btn-secondary" id="joinBoothBtn">Join a Booth</button>
+    </div>
+    <p class="couple-error" id="createError" hidden></p>
+
+    <!-- Shown after "Join a Booth" is clicked -->
+    <div class="couple-reveal" id="joinReveal" hidden>
+      <div class="form-group">
+        <label for="joinCodeInput">Enter your room code</label>
+        <input type="text" id="joinCodeInput" name="joinCodeInput" placeholder="e.g. LOVE42" maxlength="6">
+      </div>
+      <button type="button" class="btn" id="joinBoothSubmitBtn">Join Booth 💗</button>
+      <p class="couple-error" id="joinError" hidden></p>
+    </div>
+  </section>
+
+  <footer class="footer">Made with love, one memory at a time.</footer>
+
+  <script>
+    // requireAuth() (called earlier, in <head>) guarantees a session
+    // exists by the time this runs, so getCurrentUser() is safe here.
+    const currentUser = getCurrentUser();
+    document.getElementById("welcomeMessage").textContent =
+      "Welcome back, " + (currentUser.displayName || currentUser.email) + " 💗";
+
+    document.getElementById("logoutBtn").addEventListener("click", function () {
+      logOut().then(function () {
+        window.location.href = "login.html";
+      });
+    });
+  </script>
+
+  <!-- js/room.js and js/realtime.js must load before this script — they
+       provide the room-code storage and Supabase Realtime functions
+       (createRoom()/joinRoom()) used below. -->
+  <script src="js/room.js"></script>
+  <script src="js/realtime.js"></script>
+  <script>
+    // Couple Booth: Create/Join now talk to Supabase in real time
+    // (see js/realtime.js) — a room only "exists" once it's a row in
+    // the `rooms` table, and joining checks that row before letting
+    // you into booth.html.
+    const createBoothBtn = document.getElementById("createBoothBtn");
+    const createError = document.getElementById("createError");
+    const joinBoothBtn = document.getElementById("joinBoothBtn");
+    const joinReveal = document.getElementById("joinReveal");
+    const joinCodeInput = document.getElementById("joinCodeInput");
+    const joinBoothSubmitBtn = document.getElementById("joinBoothSubmitBtn");
+    const joinError = document.getElementById("joinError");
+
+    // A valid room code is exactly 6 letters/numbers (matches the shape
+    // generateRoomCode() in js/room.js produces).
+    const ROOM_CODE_PATTERN = /^[A-Z0-9]{6}$/;
+
+    createBoothBtn.addEventListener("click", function () {
+      createError.hidden = true;
+      createBoothBtn.disabled = true;
+      createBoothBtn.textContent = "Creating...";
+
+      createRoom()
+        .then(function (code) {
+          saveRoomCode(code);
+          window.location.href = "booth.html";
+        })
+        .catch(function () {
+          createError.textContent = "Couldn't create a booth. Please try again 💗";
+          createError.hidden = false;
+          createBoothBtn.disabled = false;
+          createBoothBtn.textContent = "Create a Booth";
+        });
+    });
+
+    joinBoothBtn.addEventListener("click", function () {
+      joinReveal.hidden = false;
+      joinError.hidden = true;
+      joinCodeInput.focus();
+    });
+
+    // Typing again after a failed attempt clears the error instead of
+    // leaving it stuck on screen.
+    joinCodeInput.addEventListener("input", function () {
+      joinError.hidden = true;
+    });
+
+    joinBoothSubmitBtn.addEventListener("click", function () {
+      const code = joinCodeInput.value.trim().toUpperCase();
+
+      if (!ROOM_CODE_PATTERN.test(code)) {
+        joinError.textContent = "Please enter a valid booth code 💗";
+        joinError.hidden = false;
+        joinCodeInput.focus();
+        return;
+      }
+
+      joinError.hidden = true;
+      joinBoothSubmitBtn.disabled = true;
+      joinBoothSubmitBtn.textContent = "Joining...";
+
+      joinRoom(code)
+        .then(function () {
+          saveRoomCode(code);
+          window.location.href = "booth.html";
+        })
+        .catch(function (error) {
+          if (error.type === "not_found") {
+            joinError.textContent = "That booth code doesn't exist 💗";
+          } else if (error.type === "room_full") {
+            joinError.textContent = "This booth is already full 💗";
+          } else {
+            joinError.textContent = "Couldn't join this booth. Please try again 💗";
+          }
+          joinError.hidden = false;
+        })
+        .finally(function () {
+          joinBoothSubmitBtn.disabled = false;
+          joinBoothSubmitBtn.textContent = "Join Booth 💗";
+        });
+    });
+  </script>
+
+</body>
+</html>

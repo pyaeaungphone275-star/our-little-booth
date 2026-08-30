@@ -46,23 +46,28 @@ function startPeerCall(options) {
 
   function createPeerConnection() {
     pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
+    console.log("[WebRTC] Peer connection created (" + (isOfferer ? "offerer" : "answerer") + ")");
 
     localStream.getTracks().forEach(function (track) {
       pc.addTrack(track, localStream);
     });
 
     pc.ontrack = function (event) {
+      console.log("[WebRTC] Remote track received");
       if (options.onRemoteStream) options.onRemoteStream(event.streams[0]);
     };
 
     pc.onicecandidate = function (event) {
       if (event.candidate) {
+        console.log("[WebRTC] ICE candidate sent");
         roomChannel.broadcast("webrtc-ice-candidate", { candidate: event.candidate });
       }
     };
 
     pc.onconnectionstatechange = function () {
       if (stopped || !pc) return;
+
+      console.log("[WebRTC] Connection state: " + pc.connectionState);
 
       if (pc.connectionState === "connected") {
         setStatus("connected");
@@ -79,7 +84,9 @@ function startPeerCall(options) {
 
   function flushPendingCandidates() {
     pendingRemoteCandidates.forEach(function (candidate) {
-      pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(function () {});
+      pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(function (error) {
+        console.warn("[WebRTC] Failed to add queued ICE candidate:", error);
+      });
     });
     pendingRemoteCandidates = [];
   }
@@ -97,15 +104,18 @@ function startPeerCall(options) {
         return pc.setLocalDescription(offer);
       })
       .then(function () {
+        console.log("[WebRTC] Offer created");
         roomChannel.broadcast("webrtc-offer", { sdp: pc.localDescription });
       })
-      .catch(function () {
+      .catch(function (error) {
+        console.error("[WebRTC] Failed to create/send offer:", error);
         if (options.onError) options.onError("connection_failed");
       });
   }
 
   // Only the answerer calls this, on receiving the offerer's offer.
   function handleOffer(data) {
+    console.log("[WebRTC] Offer received");
     if (!pc) createPeerConnection();
     setStatus("connecting");
 
@@ -119,16 +129,19 @@ function startPeerCall(options) {
         return pc.setLocalDescription(answer);
       })
       .then(function () {
+        console.log("[WebRTC] Answer created");
         roomChannel.broadcast("webrtc-answer", { sdp: pc.localDescription });
         clearInterval(readyPingTimer);
       })
-      .catch(function () {
+      .catch(function (error) {
+        console.error("[WebRTC] Failed to handle offer / create answer:", error);
         if (options.onError) options.onError("connection_failed");
       });
   }
 
   // Only the offerer calls this, on receiving the answerer's answer.
   function handleAnswer(data) {
+    console.log("[WebRTC] Answer received");
     if (!pc) return;
 
     pc.setRemoteDescription(new RTCSessionDescription(data.sdp))
@@ -136,19 +149,23 @@ function startPeerCall(options) {
         remoteDescriptionSet = true;
         flushPendingCandidates();
       })
-      .catch(function () {
+      .catch(function (error) {
+        console.error("[WebRTC] Failed to apply answer:", error);
         if (options.onError) options.onError("connection_failed");
       });
   }
 
   function handleIceCandidate(data) {
     if (!data.candidate) return;
+    console.log("[WebRTC] ICE candidate received");
 
     // ICE candidates can arrive before setRemoteDescription() finishes
     // (they're sent as soon as each one is discovered) — queue them
     // until there's a remote description to attach them to.
     if (pc && remoteDescriptionSet) {
-      pc.addIceCandidate(new RTCIceCandidate(data.candidate)).catch(function () {});
+      pc.addIceCandidate(new RTCIceCandidate(data.candidate)).catch(function (error) {
+        console.warn("[WebRTC] Failed to add ICE candidate:", error);
+      });
     } else {
       pendingRemoteCandidates.push(data.candidate);
     }
@@ -186,6 +203,7 @@ function startPeerCall(options) {
       stopped = true;
       clearInterval(readyPingTimer);
       if (pc) {
+        console.log("[WebRTC] Closing peer connection");
         pc.close();
         pc = null;
       }

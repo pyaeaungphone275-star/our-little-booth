@@ -54,13 +54,31 @@ if (roomCode) {
       localStream: localStream,
       onRemoteStream: function (stream) {
         const remoteVideo = document.createElement("video");
-        remoteVideo.srcObject = stream;
         remoteVideo.autoplay = true;
         remoteVideo.playsInline = true;
 
         remoteCameraPreview.innerHTML = "";
         remoteCameraPreview.appendChild(remoteVideo);
         remoteCameraPreview.classList.add("camera-active");
+
+        remoteVideo.srcObject = stream;
+
+        // Browsers can silently block autoplay of an unmuted <video>
+        // (no thrown error, nothing in the console) when it isn't tied
+        // closely enough to a user gesture — the connection succeeds but
+        // nothing ever appears on screen. Calling play() explicitly lets
+        // us detect that and fall back to a muted (still visible) feed
+        // instead of failing invisibly.
+        const playPromise = remoteVideo.play();
+        if (playPromise) {
+          playPromise.catch(function (error) {
+            console.warn("[WebRTC] Remote video autoplay blocked, retrying muted:", error);
+            remoteVideo.muted = true;
+            remoteVideo.play().catch(function (error2) {
+              console.error("[WebRTC] Remote video failed to play even muted:", error2);
+            });
+          });
+        }
       },
       onStatusChange: function (status) {
         if (status === "connecting") {
@@ -302,6 +320,7 @@ requestCameraAndMic()
     // Permission granted! "stream" is the live video (and, in a room,
     // audio) coming from the webcam/mic.
     localStream = stream;
+    if (roomCode) console.log("[WebRTC] Local media ready");
 
     // Create a <video> element in JavaScript to play that stream.
     videoElement = document.createElement("video");
